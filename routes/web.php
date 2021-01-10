@@ -18,7 +18,12 @@ Route::get('/', function () {
 
 //Router Auth
 
-Route::get('/login','ConnectController@getLogin')->name('login');
-Route::get('/register','ConnectController@getRegister')->name('register');
+Route::get('/login','UserController@login')->name('login');
+Route::post('/login','UserController@authenticate')->name('login');
+
+Route::get('/register','UserController@register')->name('register');
+Route::post('/register','UserController@create')->name('create');
+
+Route::get('/logout','UserController@logout')->name('logout');
 
 

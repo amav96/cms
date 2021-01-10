@@ -1,0 +1,135 @@
+body{
+    background-color: #f5f6fa;
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+   
+}
+
+h2,h3,h4,h5,ul,body,html{
+    padding: 0px;
+    margin: 0px;
+}
+.mtop16{
+    margin-top: 16px;
+}
+
+.wrapper {
+    min-height: 100vh;
+    overflow: hidden;
+}
+.wrapper .col1{
+    float: left;
+    position: relative;
+    z-index: 999;
+    width: 17%;
+}
+.wrapper .col2{
+    float: left;
+    position: relative;
+    z-index: 999;
+    width: 83%;
+}
+
+/* barra lateral izquierda sidebar */
+
+.sidebard {
+    background-color: #fff;
+    min-height: 100vh;
+}
+.sidebard .section-top{
+    background: #2caaff;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+.section-top .logo{
+   display: block;
+   margin: 0px auto;
+   padding-top: 24px;
+   width: 60%;
+}
+.section-top .user{
+    color: #fff !important;
+    padding:16px;
+ }
+ .user a{
+    color: #fff !important;
+    font-size: 1em;
+ }
+ .main{
+     display: block;
+     margin-top: 8px;
+ }
+ .main ul li{
+     margin-bottom: 4px;
+ }
+ .main li a {
+    color: #8998ac;
+    display: block;
+    font-size: 1.1em;
+    padding:12px 12px;
+}
+
+.main a i{
+    margin-right: 10px;
+    transition: 0.5s;
+}
+.main a:hover{
+    background: #2caaff;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    color: white;
+    text-decoration: none;
+    transition: 0.8s;
+}
+
+
+/* navbar barra lateral superior */
+
+.navbar{
+    background-color: #2caaff;
+}
+.navbar a{
+    color: #fff;
+}
+
+/* panel contenido central  */
+
+.page{
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+ .page .breadcrumb{
+  background-color: #fff;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.10);
+}
+.page .breadcrumb-item a:hover{
+   text-decoration: none;
+  }
+.panel {
+      background-color: #fff;
+      border-radius: 6px;
+      border-bottom: 2px solid #2caaff !important;
+      width: 100%;
+  }
+  .panel .header{
+      border-bottom: 1px solid #e8e8e8;
+  }
+  .panel .header .title {
+      display: inline-block;
+      color: #19213d;
+      font-size: 1.1em;
+      padding: 12px 16px;
+  }
+  .panel .inside{
+      padding: 16px;
+  }
+
+  /* aacciones para usuarios */
+
+  .opts a {
+      border-radius: 4px;
+      border: 1px solid #dedede;
+      display: inline-block;
+      padding: 8px 12px;
+  }
+
+  
+
