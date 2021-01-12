@@ -59,9 +59,12 @@
                             @section('breadcrumb')
                             @show
                         </ol>
+                        @include('includes.message')
                     </nav>
+
+
                 </div>
-                @include('includes.message')
+
             </div>
 
             @section('content')

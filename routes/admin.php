@@ -13,6 +13,7 @@ Route::prefix('/admin')->group(function(){
 
     //module categories
 
-    Route::get('/categories', 'Admin\CategoryController@home');
+    Route::get('/categories/{module}', 'Admin\CategoryController@home');
+    Route::post('/category/create','Admin\CategoryController@create');
 
 });

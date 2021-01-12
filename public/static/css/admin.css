@@ -122,6 +122,7 @@ h2,h3,h4,h5,ul,body,html{
       padding: 16px;
   }
 
+
   /* aacciones para usuarios */
 
   .opts a {
@@ -130,6 +131,19 @@ h2,h3,h4,h5,ul,body,html{
       display: inline-block;
       padding: 8px 12px;
   }
+
+
+  /* nav */
+
+  .panel .inside .nav-link{
+      border: 1px solid #2caaff;
+      margin-right: 8px;
+  }
+  .panel .inside .nav-link:hover{
+    color: #fff;
+    background-color: #2caaff;
+    transition: 0.5s;
+}
 
   
 
