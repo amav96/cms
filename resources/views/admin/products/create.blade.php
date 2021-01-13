@@ -7,7 +7,7 @@
     <a href="{{ url('/admin/products') }}"><i class="fas fa-boxes"></i> Productos</a>
 </li>
 <li class="breadcrumb-item">
-    <a href="{{ url('/admin/products/add') }}"><i class="fas fa-plus"></i> Agregar producto</a>
+    <a href="{{ url('/admin/products/create') }}"><i class="fas fa-plus"></i> Agregar producto</a>
 </li>
 @endsection
 
@@ -22,9 +22,8 @@
 
         <div class="inside">
 
-            <form method="POST" action=" ">
+            <form method="POST" enctype="multipart/form-data" action="{{ url('/admin/product/save') }}" >
                 @csrf
-
                 <div class="row">
 
                     <div class="col-md-6">
@@ -40,14 +39,19 @@
                     <div class="col-md-3">
                         <label for="category">Categoría: </label>
                         <select class="custom-select" name="category" id="">
-                            <option value="">Seleccione categoria</option>
+                        @foreach($categories as $key => $value )
+                              <option value="{{$key}}">{{$value}}</option>
+                        @endforeach
+
+                    
                         </select>
                     </div>
+
                     <div class="col-md-3">
                         <label for="image">Imagen </label>
                         <div class="custom-file">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                <input name="image" type="file" accept="image/*" class="custom-file-input" id="inputGroupFile01"
                                     aria-describedby="inputGroupFileAddon01">
                                 <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                             </div>
@@ -65,7 +69,7 @@
                                         class="fas fa-dollar-sign"></i></span>
                             </div>
 
-                            <input type="number" class="form-control">
+                            <input type="number" name="price" class="form-control">
                         </div>
                     </div>
 

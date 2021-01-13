@@ -20,7 +20,7 @@
         <div class="inside">
 
             <div class="btns">
-                <a href="{{ url('/admin/product/add') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar
+                <a href="{{ url('/admin/product/create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar
                     producto</a>
             </div>
 

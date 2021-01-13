@@ -22,7 +22,7 @@ class CategoryController extends Controller
         return view('admin.categories.home',$data);
     }
 
-    public function create(Request $request){
+    public function save(Request $request){
         $rules = [
             'name' => 'required',
             'icon' => 'required'
@@ -51,5 +51,63 @@ class CategoryController extends Controller
 
             endif;
         endif;
+    }
+
+    public function edit($id){
+
+        $category = Category::find($id);
+       
+        $data= ['category' => $category];
+
+        return view('admin.categories.edit',$data);
+
+
+    }
+
+    public function update(Request $request, $id){
+        
+        //reglas de validacion
+
+        $rules = [
+            'name' => 'required',
+            'module' => 'required',
+            'icon' => 'required'
+        ];
+        //mensajes de valdiacion
+
+        $message = [
+            'name.required' => 'Debe ingresar un nombre de categoria',
+            'module.required' => 'Debe escoger una modulo',
+            'icon.required' => 'Debes ingresar un ícono'
+        ];
+
+        //validar la info que llega 
+
+        $validator = Validator::make($request->all(),$rules,$message);
+
+        if($validator->fails()):
+            return back()->withErrors($validator)->with('message','Ocurrio un error')->with('typealert','danger');
+        else:
+            $category = Category::find($id);
+            $category->name = e($request->input('name'));
+            $category->module = $request->input('module');
+            $category->slug = Str::slug($request->input('name'));
+            $category->icon = e($request->input('icon'));
+
+            if($category->save()):
+                return back()->with('message','Editado con exito!')->with('typealert','success');
+            endif;
+        endif;
+
+        //actualizar
+    }
+
+    public function delete($id){
+        $category = Category::find($id);
+
+        if($category->delete()):
+            return back()->with('message','Eliminado correctamente')->with('typealert','success');
+        endif;
+
     }
 }

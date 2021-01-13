@@ -20,7 +20,7 @@
                     <h2 class="title"><i class="fas fa-plus"></i> Agregar Categorias</h2>
                 </div>
                 <div class="inside">
-                    <form method="POST" action="{{ url('/admin/category/create') }}">
+                    <form method="POST" action="{{ url('/admin/category/save') }}">
                         @csrf
 
                         <label for="name">Nombre : </label>
