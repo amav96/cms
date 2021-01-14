@@ -16,7 +16,7 @@ class ProductController extends Controller
 
     public function home(){
 
-        $products = Product::orderBy('id','desc')->paginate(25);
+        $products = Product::with(['category'])->orderBy('id','desc')->paginate(25);
         $data = ['products' => $products];
 
 
@@ -27,7 +27,6 @@ class ProductController extends Controller
         $categories = Category::where('module','0')->pluck('name','id');
         $data = ['categories' => $categories];
         
-
         return view('admin.products.create',$data);
     }
 
@@ -82,7 +81,7 @@ class ProductController extends Controller
             $product->price = $request->input('price');
             $product->in_discount = $request->input('indiscount');
             $product->discount = $request->input('discount');
-            $product->content = e($request->input('content'));
+            $product->content = $request->input('content');
 
             if($product->save()):
                 //compruebo si existe un archivo con el name image
@@ -109,5 +108,96 @@ class ProductController extends Controller
 
 
       
+    }
+
+    public function edit($id){
+
+        $product = Product::find($id);
+
+        $categories = Category::where('module','0')->pluck('name','id');
+        $data = ['categories' => $categories,'product' => $product];
+
+        return view('admin.products.edit',$data);
+    }
+
+    public function update(Request $request, $id){
+
+        $rules = [
+            'name' => 'required',
+            'image' => 'image',
+            'category' => 'required',
+            'price' => 'required',
+            'indiscount' => 'required',
+            'content' => 'required',
+        ];
+
+        $message = [
+            'name.required' => 'Debes ingresar el nombre del producto',
+            'image.image' => 'El archivo no es una imagen',
+            'category.required' => 'Debes seleccionar una categoria',
+            'price.required' => 'Debes ingresar el precio del producto',
+            'indiscount.required' => 'Debes indicar si esta en descuento el producto',
+            'content.required' => 'Debes ingresar una descripción del producto'
+        ];
+
+        $validator = Validator::make($request->all(),$rules,$message);
+
+        if($validator->fails()):
+            return back()->withErrors($validator)->with('message','Ocurrio un error')->with('typealert','danger')->withInput();
+        else:
+
+            $product =  Product::find($id);
+            $product->status = $request->input('status');
+            $product->name = e($request->input('name'));
+            $product->category_id = $request->input('category');
+
+           if($request->hasFile('image')):
+
+            //carpeta con fechas a guardar
+            $path = '/'.date('Y-m-d');
+            //extension del archivo
+            $fileExt = trim($request->file('image')->getClientOriginalExtension()); 
+            //nombre del archivo tal y como esta en la computadora
+            $nameImg = $request->file('image')->getClientOriginalName(); 
+            //para guardar en fylesystem : se agrega un key en config/filesystem. Para Prod hay que poner la ruta del hosting
+            $upload_path = Config::get('filesystems.disks.uploads.root');
+            //limpiando el nombre
+            $name = Str::slug(str_replace($fileExt,'',$nameImg));
+            //nombre final
+            $filename = rand(1,999).'-'.$name.'.'.$fileExt;
+            $final_file = $upload_path.'/'.$path.'/'.$filename;
+
+            $product->file_path = date('Y-m-d');
+            $product->image = $filename;
+
+           endif;
+
+            $product->price = $request->input('price');
+            $product->in_discount = $request->input('indiscount');
+            $product->discount = $request->input('discount');
+            $product->content = $request->input('content');
+
+            if($product->save()):
+                //compruebo si existe un archivo con el name image
+                  if($request->hasFile('image')):
+                    //si existe, seteo el campo imagen y storeAs Recibe tres parametros, 1)la ruta final, 2)el nombre del archivo,3)carpeta donde se guarda
+                    $file = $request->image->storeAs($path, $filename, 'uploads');
+
+                    //crear miniatura de la imagen
+                    $img =  Image::make($final_file);
+                    
+                    $img->fit(256,256,function($constraint){
+                        $constraint->upsize();
+                    });
+                    $img->save($upload_path.'/'.$path.'/t_'.$filename);
+                  endif;
+
+                return back()->with('message','Actualizado correctamente')->with('typealert','success');
+
+            endif;
+           
+        endif;
+
+
     }
 }
