@@ -11,4 +11,9 @@ class Product extends Model
     protected $dates = ['deleted_at'];
     protected $table = 'products';
     protected $hidden = ['created_at','updated_at'];
+
+    public function category(){
+        //relacion uno a uno
+        return $this->hasOne(Category::class,'id','category_id');
+    }
 }

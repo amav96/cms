@@ -5,7 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Models\Category,App\Http\Models\Product ;
-use Validator,Str,Config;
+use Validator,Str,Config, Image;
 
 class ProductController extends Controller
 {
@@ -15,7 +15,12 @@ class ProductController extends Controller
     }
 
     public function home(){
-       return view('admin.products.home');
+
+        $products = Product::orderBy('id','desc')->paginate(25);
+        $data = ['products' => $products];
+
+
+       return view('admin.products.home',$data);
     }
 
     public function create(){
@@ -60,17 +65,19 @@ class ProductController extends Controller
             //nombre del archivo tal y como esta en la computadora
             $nameImg = $request->file('image')->getClientOriginalName(); 
             //para guardar en fylesystem : se agrega un key en config/filesystem. Para Prod hay que poner la ruta del hosting
-            $upload_path = Config::get('filesystems.disk.uploads.root');
+            $upload_path = Config::get('filesystems.disks.uploads.root');
             //limpiando el nombre
             $name = Str::slug(str_replace($fileExt,'',$nameImg));
             //nombre final
             $filename = rand(1,999).'-'.$name.'.'.$fileExt;
+            $final_file = $upload_path.'/'.$path.'/'.$filename;
 
             $product =  new Product;
             $product->status = '0';
             $product->name = e($request->input('name'));
             $product->slug = Str::slug($request->input('name'));
             $product->category_id = $request->input('category');
+            $product->file_path = date('Y-m-d');
             $product->image = $filename;
             $product->price = $request->input('price');
             $product->in_discount = $request->input('indiscount');
@@ -82,6 +89,14 @@ class ProductController extends Controller
                   if($request->hasFile('image')):
                     //si existe, seteo el campo imagen y storeAs Recibe tres parametros, 1)la ruta final, 2)el nombre del archivo,3)carpeta donde se guarda
                     $file = $request->image->storeAs($path, $filename, 'uploads');
+
+                    //crear miniatura de la imagen
+                    $img =  Image::make($final_file);
+                    
+                    $img->fit(256,256,function($constraint){
+                        $constraint->upsize();
+                    });
+                    $img->save($upload_path.'/'.$path.'/t_'.$filename);
                   endif;
 
                 return redirect('/admin/products')->with('message','Producto creado correctamente')->with('typealert','success');
