@@ -13,7 +13,9 @@ Route::prefix('/admin')->group(function(){
 
     Route::post('/product/save', 'Admin\ProductController@save');
     Route::post('/product/{id}/update', 'Admin\ProductController@update');
-
+    Route::post('/product/{id}/gallery/add', 'Admin\ProductController@productGalleryAdd');
+    Route::get('/product/{id}/gallery/{galleryid}/delete', 'Admin\ProductController@productGalleryDelete');
+    
 
     //module categories
 

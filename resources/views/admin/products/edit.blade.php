@@ -157,6 +157,40 @@
                     <img src="{{ url('/uploads/'.$product->file_path.'/'.$product->image) }}" class="img-fluid mtop16">
                 </div>
             </div>
+
+            <div class="panel shadow mtop16">
+                <div class="header">
+                    <h2 class="title"><i class="far fa-images"></i> Galeria</h2>
+                </div>
+                <div class="inside product_gallery">
+                    <form method="POST" action="{{ url('/admin/product/'.$product->id.'/gallery/add') }}"
+                        enctype="multipart/form-data" id="form_product_gallery">
+                        @csrf
+                        <input class="form-control" style="display:none" type="file" name="file_image"
+                            id="product_file_image" accept="image/*" required>
+                    </form>
+                    <div class="btn-submit">
+                        <a href="#" id="btn_product_file_image"><i class="fas fa-plus"></i></a>
+                    </div>
+
+                    <div class="tumbs">
+                        @foreach($product->getGallery as $image)
+
+
+                        <div class="tumb">
+                            <a href=" {{ url('admin/product/'.$product->id.'/gallery/'.$image->id.'/delete') }} "
+                                data-toggle="tooltip" data-placement="top" title="Eliminar"><i
+                                    class="fas fa-trash-alt"></i>
+                            </a>
+                            <img src="{{ url('/uploads/'.$image->file_path.'/t_'.$image->file_name) }}" alt="">
+
+                        </div>
+
+                        @endforeach
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 

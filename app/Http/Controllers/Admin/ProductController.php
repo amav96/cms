@@ -4,7 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Models\Category,App\Http\Models\Product ;
+use App\Http\Models\Category,App\Http\Models\Product,App\Http\Models\ProductGallery ;
 use Validator,Str,Config, Image;
 
 class ProductController extends Controller
@@ -112,7 +112,7 @@ class ProductController extends Controller
 
     public function edit($id){
 
-        $product = Product::find($id);
+        $product = Product::findOrFail($id);
 
         $categories = Category::where('module','0')->pluck('name','id');
         $data = ['categories' => $categories,'product' => $product];
@@ -146,7 +146,7 @@ class ProductController extends Controller
             return back()->withErrors($validator)->with('message','Ocurrio un error')->with('typealert','danger')->withInput();
         else:
 
-            $product =  Product::find($id);
+            $product =  Product::findOrFail($id);
             $product->status = $request->input('status');
             $product->name = e($request->input('name'));
             $product->category_id = $request->input('category');
@@ -196,6 +196,84 @@ class ProductController extends Controller
 
             endif;
            
+        endif;
+
+
+    }
+
+    public function productGalleryAdd(Request $request, $id){
+
+        $rules = [
+
+            'file_image' => 'required|image'
+        ];
+
+        $message = [
+            'file_image.required' => 'Debes seleccionar una imagen',
+            'file_image.image' => 'El archivo seleccionado no es una imagen'
+        ];
+
+        $validator = Validator::make($request->all(),$rules,$message);
+        if($validator->fails()):
+            return back()->withErrors($validator)->with('message','Ocurrio un error')->with('typealert','danger')->withInput();
+        else:
+            if($request->hasFile('file_image')):
+                //creo la carpeta donde la guardare
+                $path = '/'.date('Y-m-d');
+                //obtengo la extension del archivo
+                $fileExt = trim($request->file('file_image')->getClientOriginalExtension());
+                //la ruta donde se guardara y yo accedere al archivo
+                $upload_path = Config::get('filesystems.disks.uploads.root');
+                //extraigo el nombre de la foto y lo convierto en slug
+                $name =  Str::slug(str_replace($fileExt,'',$request->file('file_image')->getClientOriginalName()));
+                //nombre del archivo listo para guardarlo
+                $filename = rand(1,999).'-'.$name.'.'.$fileExt;
+                $final_file = $upload_path.'/'.$path.'/'.$filename;
+
+                $gallery = new ProductGallery;
+                $gallery->product_id = $id;
+                $gallery->file_path = date('Y-m-d');
+                $gallery->file_name = $filename;
+
+                if($gallery->save()):
+                     if($request->hasFile('file_image')):
+                       $file = $request->file_image->storeAs($path,$filename,'uploads');
+                       
+                       $image = Image::make($final_file);
+                       
+                       $image->fit(256,256,function($constraint){
+                            $constraint->upsize();
+                       });
+                       $image->save($upload_path.'/'.$path.'/t_'.$filename);
+                     endif;
+                     return back()->with('message','Imagen agregada correctamente')->with('typealert','success');
+                else:
+                endif;
+                
+            else:
+               
+
+            endif;
+      
+
+        endif;
+
+    }
+
+    public function productGalleryDelete($id , $galleryid){
+        $gallery = ProductGallery::findOrFail($galleryid);
+        $path = $gallery->file_path;
+        $file = $gallery->file_name;
+        $upload_path = Config::get('filesystems.disks.uploads.root');
+
+        if($gallery->product_id != $id):
+            return back()->with('message','La imagen no se puede eliminar')->with('typealert','danger');
+        else:
+            if($gallery->delete()):
+                unlink($upload_path.'/'.$path.'/'.$file);
+                unlink($upload_path.'/'.$path.'/t_'.$file);
+                return back()->with('message','Imagen eliminada correctamente')->with('typealert','success');
+            endif;
         endif;
 
 

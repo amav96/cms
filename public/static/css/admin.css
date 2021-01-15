@@ -145,5 +145,76 @@ h2,h3,h4,h5,ul,body,html{
     transition: 0.5s;
 }
 
+.product_gallery{
+    overflow: hidden;
+}
+.product_gallery .btn-submit{
+   
+    display: block;
+    margin-right: 1%;
+     width: 100%;
+}
+.product_gallery .btn-submit a{
+    border: 1px dashed #666;
+    border-radius: 4px;
+    color: #333;
+    display: block;
+    font-size: 1.5em;
+    text-align: center;
+    padding: 12px;
+    width: 100%;
+    transition: 0.5s;
+}
+
+.product_gallery .btn-submit a:hover{
+   background-color: #2caaff;
+   color: #fff;
+   transition: 0.5s;
+}
+.product_gallery .tumbs {
+
+overflow: hidden;
+
+
+}
+
+.product_gallery .tumbs .tumb {
+
+    float: left;
+    margin-top: 16px;
+    position: relative;
+    width: 50%;
+    
+    
+   
+}
+.product_gallery .tumbs .tumb a {
+  background-color: rgba(0,0,0,0.5);
+    display: inline-block;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 15px;
+    position:absolute;
+    bottom: 5px;
+    right: 5px;
+    
+
+    
+
+}
+
+.product_gallery .tumbs .tumb img {
+    
+    
+    border-radius: 4px;
+    width: 100%;
+    padding: 2px;
+
+}
+
+
+
+
+
   
 
